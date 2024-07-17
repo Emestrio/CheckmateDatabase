@@ -59,7 +59,7 @@ public enum ChessColor
     White,
 }
 
-[JsonConverter(typeof(CustomEnumConverter))]
+[JsonConverter(typeof(ResultEnumConverter))]
 public enum Result
 {
     Win,
@@ -79,30 +79,16 @@ public enum Result
     TimeVsInsufficient,
 }
 
-internal class CustomEnumConverter : JsonConverter<Result>
+internal class ResultEnumConverter : JsonConverter<Result>
 {
     public override Result Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var str = reader.GetString()?.Trim();
+        string? value = reader.GetString()?.Trim();
 
-        return str switch
+        return value switch
         {
-            "win" => Result.Win,
-            "checkmated" => Result.Checkmated,
-            "agreed" => Result.Agreed,
-            "repetition" => Result.Repetition,
-            "timeout" => Result.Timeout,
-            "resigned" => Result.Resigned,
-            "stalemate" => Result.Stalemate,
-            "lose" => Result.Lose,
-            "insufficient" => Result.Insufficient,
             "50move" => Result.Move50,
-            "abandoned" => Result.Abandoned,
-            "kingofthehill" => Result.Kingofthehill,
-            "threecheck" => Result.Threecheck,
-            "bughousepartnerlose" => Result.Bughousepartnerlose,
-            "timevsinsufficient" => Result.TimeVsInsufficient,
-            var value => throw new JsonException($"value {value} have no corrosponding {nameof(Result)} enum")
+            _ => Enum.Parse<Result>(value),
         };
     }
 
