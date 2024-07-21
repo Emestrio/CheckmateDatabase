@@ -88,7 +88,7 @@ internal class ResultEnumConverter : JsonConverter<Result>
         return value switch
         {
             "50move" => Result.Move50,
-            _ => Enum.Parse<Result>(value),
+            _ => Enum.Parse<Result>(value, ignoreCase: true),
         };
     }
 
